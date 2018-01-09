@@ -10,7 +10,7 @@ public class Game {
 
     private char turn; // who's turn is it, 'x' or 'o' ? x always starts
     private boolean twoPlayer; // true if this is a 2 player game, false if AI playing
-    private char [][] grid; // a 2D array of chars representing the game grid
+    private char[][] grid; // a 2D array of chars representing the game grid
     private int freeSpots; // counts the number of empty spots remaining on the board (starts from 9  and counts down)
     private static GameUI gui;
 
@@ -148,9 +148,47 @@ public class Game {
      * @param grid 2D array of characters representing the game board
      * @return String indicating the outcome of the game: "X wins" or "O wins" or "Tie" or "None"
      */
-    public String checkGameWinner(char [][]grid){
+    public String checkGameWinner(char[][] grid){
         String result = "None";
-        //Student code goes here ...
+
+        String winner = "";
+
+        //do hard coded checks for diagonals, 2 diagonales, 2 players, 4 options.
+        if (grid[0][0] == 'o' && grid[1][1] == 'o' && grid[2][2] == 'o') {
+            winner = "o";
+        } else if (grid[0][0] == 'x' && grid[1][1] == 'x' && grid[2][2] == 'x') {
+            winner = "x";
+        } else if (grid[0][2] == 'o' && grid[1][1] == 'o' && grid[2][0] == 'o') {
+            winner = "o";
+        } else if (grid[0][2] == 'x' && grid[1][1] == 'x' && grid[2][0] == 'x') {
+            winner = "x";
+        }
+
+        //don't enter loop if there is already a winner. (saves 11 'if's if someone won by diagonal but adds extra 1 if no did).
+        //    if(winner.equals("")) {
+
+        //Do single for loop to cover all 12 left cases. (6 ways to win, 2 players)
+        for(int i = 0; i < 3; i++) {
+            if(grid[i][0] == 'x' && grid[i][1] == 'x' && grid[i][2] == 'x') {
+                winner = "x";
+            } else if(grid[0][i] == 'x' && grid[1][i] == 'x' && grid[2][i] == 'x') {
+                winner = "x";
+            } else if(grid[i][0] == 'o' && grid[i][1] == 'o' && grid[i][2] == 'o') {
+                winner = "o";
+            } else if(grid[0][i] == 'o' && grid[1][i] == 'o' && grid[2][i] == 'o') {
+                winner = "o";
+            }
+        }
+
+        if(!winner.equals("")) {
+            //if winner is not empty (not equal to "") set the result.
+            result = winner.toUpperCase() + " wins";
+        } else if(freeSpots==0) {
+            // if no winner, and no more turns left set result to tie.
+            result = "Tie";
+        }
+
+        // return result
         return result;
     }
 
@@ -158,7 +196,7 @@ public class Game {
      * Main function
      * @param args command line arguments
      */
-    public static void main(String args[]){
+    public static void main(String[] args){
         Game game = new Game();
         gui = new GameUI(game);
     }
